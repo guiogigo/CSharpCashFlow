@@ -1,4 +1,4 @@
-﻿using CashFlow.Domain.Enums;
+﻿using CashFlow.Domain.Enums.PaymentType;
 
 namespace CashFlow.Domain.Entities;
 public class Expense

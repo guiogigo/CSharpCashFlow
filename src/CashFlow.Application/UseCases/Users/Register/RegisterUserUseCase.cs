@@ -6,6 +6,7 @@ using CashFlow.Domain.Repositories.Users;
 using CashFlow.Domain.Security.Cryptography;
 using CashFlow.Domain.Security.Tokens;
 using CashFlow.Exception;
+using CashFlow.Exception.ExceptionsBase;
 using FluentValidation.Results;
 
 namespace CashFlow.Application.UseCases.Users.Register;
@@ -67,7 +68,8 @@ public class RegisterUserUseCase : IRegisterUserUseCase
         if(result.IsValid == false)
         {
             var errorMessages = result.Errors.Select(e => e.ErrorMessage).ToList();
-            
+
+            throw new ErrorOnValidationException(errorMessages);
         }
     }
 }

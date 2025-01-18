@@ -9,5 +9,17 @@ internal class UnitOfWork : IUnitOfWork
         _dbContext = dbContext;
     }
 
-    public async Task Commit() => await _dbContext.SaveChangesAsync();
+    public async Task Commit()
+    {
+        /*try
+        {
+
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex) {
+            Console.WriteLine($"Erro ao salvar no banco: {ex.Message}");
+            throw;
+        }*/
+        await _dbContext.SaveChangesAsync();
+    }
 }

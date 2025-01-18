@@ -41,16 +41,20 @@ public class RegisterUserUseCase : IRegisterUserUseCase
         
         var user = _mapper.Map<Domain.Entities.User>(request);
         user.Password = _passwordEncripter.Encrypt(request.Password);
-        user.UserIdentifier = Guid.NewGuid();
+        user.UserIdentify = Guid.NewGuid();
 
         await _userWriteOnlyRepository.Add(user);
         await _unitOfWork.Commit();
 
-        return new ResponseRegisteredUserJson
+        var problema = _tokenGenerator.Generate(user);
+
+        var retorno = new ResponseRegisteredUserJson
         {
             Name = user.Name,
-            Token = _tokenGenerator.Generate(user),
+            Token = problema,
         };
+
+        return retorno;
 
 
     }

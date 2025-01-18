@@ -22,7 +22,7 @@ internal class JwtTokenGenerator : IAccessTokenGenerator
         var claims = new List<Claim>()
         {
             new Claim(ClaimTypes.Name, user.Name),
-            new Claim(ClaimTypes.Sid, user.UserIdentifier.ToString()),
+            new Claim(ClaimTypes.Sid, user.UserIdentify.ToString()),
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -31,6 +31,7 @@ internal class JwtTokenGenerator : IAccessTokenGenerator
             SigningCredentials = new SigningCredentials(SecurityKey(), SecurityAlgorithms.HmacSha256Signature),
             Subject = new ClaimsIdentity(claims)
         };
+
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var securityToken = tokenHandler.CreateToken(tokenDescriptor);

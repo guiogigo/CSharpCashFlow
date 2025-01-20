@@ -1,19 +1,19 @@
 ﻿using CashFlow.Exception;
 using CommonTestUtilities.Requests;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using WebApi.Test.InlineData;
 
 namespace WebApi.Test.Users.Register;
-public class RegisterUserTest : IClassFixture<CustumWebApplicationFactory>
+public class RegisterUserTest : IClassFixture<CustomWebApplicationFactory>
 {
     private const string METHOD = "api/User";
     private readonly HttpClient _httpClient;
-    public RegisterUserTest(CustumWebApplicationFactory webApplicationFactory)
+    public RegisterUserTest(CustomWebApplicationFactory webApplicationFactory)
     {
         _httpClient = webApplicationFactory.CreateClient();
     }
@@ -35,9 +35,7 @@ public class RegisterUserTest : IClassFixture<CustumWebApplicationFactory>
     }
 
     [Theory]
-    [InlineData("en")]
-    [InlineData("pt-BR")]
-    [InlineData("pt-PT")]
+    [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Empty_Name(string cultureInfo)
     {
         var request = RequestRegisterUserJsonBuilder.Build();

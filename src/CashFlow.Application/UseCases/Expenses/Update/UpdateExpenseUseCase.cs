@@ -3,6 +3,7 @@ using CashFlow.Application.UseCases.Expenses.Register;
 using CashFlow.Communication.Requests;
 using CashFlow.Domain.Repositories;
 using CashFlow.Domain.Repositories.Expenses;
+using CashFlow.Domain.Services.LoggedUser;
 using CashFlow.Exception;
 using CashFlow.Exception.ExceptionsBase;
 
@@ -12,21 +13,27 @@ public class UpdateExpenseUseCase : IUpdateExpenseUseCase
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unityOfWork;
     private readonly IExpensesUpdateOnlyRepository _repository;
+    private readonly ILoggedUser _loggedUser;
+
     public UpdateExpenseUseCase(
         IMapper mapper,
         IUnitOfWork unityOfWork,
-        IExpensesUpdateOnlyRepository repository
+        IExpensesUpdateOnlyRepository repository,
+        ILoggedUser loggedUser
         )
     {
         _mapper = mapper;
         _unityOfWork = unityOfWork; 
         _repository = repository;
+        _loggedUser = loggedUser;
     }
     public async Task Execute(long id, RequestExpenseJson request)
     {
         Validate(request);
 
-        var expense = await _repository.GetById(id);
+        var loggedUser = await _loggedUser.Get();
+
+        var expense = await _repository.GetById(loggedUser, id);
         if (expense is null) throw new NotFoundException(ResourceErrorMessages.EXPENSE_NOT_FOUND);
 
         _mapper.Map(request, expense);

@@ -66,7 +66,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase
         var emailExist = await _userReadOnlyRepository.ExistActiveUserWithEmail(request.Email);
         if(emailExist)
         {
-            result.Errors.Add(new ValidationFailure(string.Empty, ResourceErrorMessages.EMAIL_INVALID));
+            result.Errors.Add(new ValidationFailure(string.Empty, ResourceErrorMessages.EMAIL_ALREADY_REGISTERED));
         }
 
         if(result.IsValid == false)

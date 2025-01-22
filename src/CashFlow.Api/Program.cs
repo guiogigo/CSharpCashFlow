@@ -10,6 +10,9 @@ using System.Text;
 using CashFlow.Infrastructure.Extensions;
 using CashFlow.Domain.Security.Tokens;
 using CashFlow.Api.Token;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using CashFlow.Infrastructure.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +77,18 @@ builder.Services.AddAuthentication(config =>
 });
 
 var app = builder.Build();
+
+app.MapHealthChecks("/Health", new HealthCheckOptions
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+    }
+});
+
+builder.Services.AddHealthChecks().AddDbContextCheck<CashFlowDbContext>();
 
 if (app.Environment.IsDevelopment())
 {
